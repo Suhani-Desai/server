@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Exam Result Website</title>
+    </head>
+    <body>
+        <h1>Exam Result Website</h1>
+        <form onsubmit="handleSubmit(event)">
+            <label for="rollno">Enter the roll no</label>
+            <input type="text" id="rollno"/><br>
+            <input type="submit"/>
+        </form>
+
+        <p id="errMsg"></p>
+        <h2 id="result"></h2>
+    </body>
+    <script>
+        function handleSubmit(event){
+            event.preventDefault()
+            const rollno = event.target[0].value
+
+            //xhr object is used to interact with server
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', `https://result-server.onrender.com/api/results/${rollno}`) //to establish the connection with server
+            xhr.send() //to send the request to server
+
+            xhr.onload = function(){ //onload mtd gets called once we receive response from the server
+                const data  = JSON.parse(xhr.responseText) //the respose is converted to object
+                
+                /*if we declare these variables inside the if else statment then it throw reference error saying 
+                 resultHandle is not found or errMsgHandle is not found because the variables written in the if else 
+                 statements are considered to be block scop and they are available at that scope only and not
+                  outside the scope. So we are declaring the varibales outside the if else statement so that it
+                   should be available to all 
+                  */
+                const errMsgHandle = document.getElementById('errMsg')
+                const resultHandle = document.getElementById('result')
+
+                if(Object.keys(data).length == 0){
+                    errMsgHandle.innerHTML = 'rollno not found'
+                    resultHandle.innerHTML = ''
+                }else{
+                    resultHandle.innerHTML = `Result- ${data.grade}`
+                    errMsgHandle.innerHTML = ''
+                }
+            }
+        }
+    </script>
+</html>

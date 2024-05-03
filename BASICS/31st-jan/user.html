@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>User Management System</title>
+   </head>
+   <body>
+      <h1>User Managemant System</h1>
+      <form onsubmit='handleSubmit(event)'>
+         <label for='id'>Enter id:</label>
+         <input type="text" id="id"/><br/>
+         <input type = "submit" />
+      </form> 
+      <p id="list"></p>
+      <p id="empty"></p>
+      
+      <script>
+         function handleSubmit(){
+            console.log(event)
+            event.preventDefault()
+            const id = event.target[0].value
+
+            const xhr = new XMLHttpRequest
+            xhr.open('GET', `https://jsonplaceholder.typicode.com/users/${id}`)
+            xhr.send()
+
+            xhr.onload = function(){
+               const data = JSON.parse(xhr.responseText)
+               console.log(data)
+
+               const listHandle = document.getElementById('list')
+               const emptyHandle = document.getElementById('empty')
+
+               if(Object.keys(data).length == 0){
+                  emptyHandle.innerHTML = 'User not found'
+                  listHandle.innerHTML = ''
+               } else {
+                  listHandle.innerHTML = `${data.username}, <br/> ${data.email},<br/> ${data.address.city},<br/> (${data.address.geo.lat}, ${data.address.geo.lng})`
+                  emptyHandle.innerHTML = ''
+               }
+
+            } 
+         }
+      </script>
+
+   </body>
+   
+</html>

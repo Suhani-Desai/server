@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Registration Page</title>
+    </head>
+    <body>
+        <h1>Register with us</h1>
+        <form onsubmit="handleSubmit()">
+        <lable for="username">Enter name</lable>
+        <input type="text" id="username" onblur="handleBlur(event)"/><br/>
+        
+        <label for="email">Email</label>
+        <input type="email" id="email"/><br/>
+
+        <label>Select Gender</label>
+        <input type="radio" name="gender" id="male"/><label for="male">Male</label>
+        <input type="radio" name="gender" id="female"><label for="female">Female</label><br/>
+    
+        <input type="submit"/>
+    </form>
+    <script>
+        function handleSubmit(event){
+            event.preventDefault()  // to prevent from the page to reload
+        }
+
+        function handleBlur(event){
+            //blur method is used when the keyboard focus is removed from the current input box
+            //or when we click from enter name to email the blur method is fired
+            const name = event.target.value
+            const url = `https://api.genderize.io/?name=${name}`
+            // console.log(url)
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', url)   //to make connection between the server and the frontend
+            xhr.send()   // to send request to the request
+
+            xhr.onload = function(){   //The onload event occurs when the request has successfully completed.
+                const data = JSON.parse(xhr.responseText)  // to convert the JSON data to javascript object
+                console.log(data)
+                const maleHandle = document.getElementById('male')  
+                const femaleHandle = document.getElementById('female')
+
+                //When the checked attribute is present in the HTML code, it means that the checkbox or
+                // radio button will be pre-selected or pre-checked when the web page loads.
+                if(data.gender === 'male'){
+                    maleHandle.checked = true
+                    femaleHandle.checked = false
+                }else if(data.gender === 'female'){
+                    maleHandle.checked = false
+                    femaleHandle.checked = true
+                } 
+            }
+        }
+    </script>
+    </body>
+</html>
+
+
+<!-- const obj = { a: 10, b: 20, c: 30 };
+
+let total = 0;
+for (let key in obj) {
+    total = total + obj[key]
+}
+
+console.log(total) 
+
+
+
+-->
